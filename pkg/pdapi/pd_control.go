@@ -33,7 +33,16 @@ type Namespace string
 type Option func(c *clientConfig)
 
 // ClusterRef sets the cluster domain of TC, it is used when generating the client address from TC.
+// NOTE: do not use this option with ClusterDomain together.
 func ClusterRef(clusterDomain string) Option {
+	return func(c *clientConfig) {
+		c.clusterDomain = clusterDomain
+	}
+}
+
+// ClusterDomain sets the cluster domain of TC, it is used when generating the client address from TC.
+// NOTE: do not use this option with ClusterRef together.
+func ClusterDomain(clusterDomain string) Option {
 	return func(c *clientConfig) {
 		c.clusterDomain = clusterDomain
 	}

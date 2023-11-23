@@ -27,7 +27,9 @@ func getPDClientFromService(pdControl pdapi.PDControlInterface, tc *v1alpha1.Tid
 			pdapi.UseHeadlessService(tc.Spec.AcrossK8s),
 		)
 	}
-	return pdControl.GetPDClient(pdapi.Namespace(tc.GetNamespace()), tc.GetName(), tc.IsTLSClusterEnabled())
+	// we always append the cluster domain to the service name if the cluster domain is not empty.
+	// ref https://github.com/pingcap/tidb-operator/issues/5375
+	return pdControl.GetPDClient(pdapi.Namespace(tc.GetNamespace()), tc.GetName(), tc.IsTLSClusterEnabled(), pdapi.ClusterDomain(tc.Spec.ClusterDomain))
 }
 
 // GetPDClient tries to return an available PDClient
